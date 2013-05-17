@@ -47,13 +47,13 @@ Follow these steps to create a new mobile service.
 
 1. Log into the [Windows Azure Management Portal](https://manage.windowsazure.com) and navigate to Mobile Services.
 
-1. Click the **+New** button then click **Mobile Service**, **Create**
+1. Click the **+New** button.
 
 	![image-2](Images/image-2.png?raw=true)
 
-1. Expand **Mobile Service**, then click **Create**
+1. Expand **Mobile Service**, then click **Create**.
  
-	![Image 3](Images/image-3.png?raw=true)
+	![Image 3](Images/create-mobile-service.png?raw=true)
  
 	This displays the **New Mobile Service** dialog.
 
@@ -63,7 +63,7 @@ Follow these steps to create a new mobile service.
 
 	This displays the **Specify database settings** page.
 
-	> **Note:** As part of this tutorial, you create a new SQL Database instance and server. You can reuse this new database and administer it as you would any other SQL Database instance. If you already have a database in the same region as the new mobile service, you can instead chooseUse existing Databaseand then select that database. The use of a database in a different region is not recommended because of additional bandwidth costs and higher latencies.
+	> **Note:** As part of this tutorial, you create a new SQL Database instance and server. You can reuse this new database and administer it as you would any other SQL Database instance. If you already have a database in the same region as the new mobile service, you can instead choose _Use existing Database_ and then select that database. The use of a database in a different region is not recommended because of additional bandwidth costs and higher latencies.
 
 1. In **Name**, type the name of the new database, then type **Login name**, which is the administrator login name for the new SQL Database server, type and confirm the password, and click the check button to complete the process.
  
@@ -88,9 +88,11 @@ Once you have created your mobile service, you can follow an easy quick start in
 
 	![Image 7](Images/image-7.png?raw=true)
 
-1. If you haven't already done so, download and install [Visual Studio 2012 Express for Windows 8](http://go.microsoft.com/fwlink/?LinkId=257546&clcid=0x409) and the [Mobile Services SDK](http://go.microsoft.com/fwlink/?LinkId=257545&clcid=0x409) on your local computer or virtual machine.
+1. Click the **Create TodoItem Table** button to add the table to your Mobile Service. This table is used by the sample application to store items.
 
-	This downloads the project for the sample _To do list_ application that is connected to your mobile service. Save the compressed project file to your local computer, and make a note of where you save it.
+1. Select _JavaScript_ in the **Language** list and click **Download**. This downloads the project for the sample _To do list_ application that is connected to your mobile service. Save the compressed project file to your local computer, and make a note of where you save it.
+
+1. If you haven't already done so, download and install [Visual Studio 2012 Express for Windows 8](http://go.microsoft.com/fwlink/?LinkId=257546&clcid=0x409) on your local computer or virtual machine.
 
 <a name="run-your-app" />
 ### Task 3 - Run your app ###
@@ -101,7 +103,9 @@ Once you have created your mobile service, you can follow an easy quick start in
 
 1. Press the **F5** key to rebuild the project and start the app.
 
-1. In the app, type meaningful text, such as _Complete the demo_, in the **Insert a TodoItem** textbox, and then click **Save**.
+	> **Note:** The Windows Azure Mobile Services client library for JavaScript is now provided via NuGet packages. When you compile your solution for the first time, the package will be downloaded automatically.
+
+1. In the app, type meaningful text, such as _Complete the lab_, in the **Insert a TodoItem** textbox, and then click **Save**.
 
 	![Image 9](Images/image-9.png?raw=true)
 
@@ -109,7 +113,7 @@ Once you have created your mobile service, you can follow an easy quick start in
 
 	> **Note:** You can review the code that accesses your mobile service to query and insert data, which is found in either the MainPage.xaml.cs file (C#/XAML project) or the default.js (JavaScript/HTML project) file.
 
-1. Back in the Management Portal, click the **Data** tab and then click the **TodoItems** table and observe that the data as been successfully stored
+1. Back in the Management Portal, click the **Data** tab and then click the **TodoItems** table and observe that the data has been successfully stored
 
 	![Image 10](Images/image-10.png?raw=true)
 
@@ -124,13 +128,9 @@ In this step we explore _To do list_ application code and see how simple the Win
 
 1. Return to the downloaded _To do list_ application Visual Studio 2012
 
-1. In solution explorer **expand the references folder** and show the Windows Azure Mobile Services Client SDK reference.  
+1. Open **default.js** under **js** folder.  This is the key JavaScript function provided by the Mobile Services client SDK that provides a way for your application to interact with **Windows Azure Mobile Services**. Locate the portion of code where a new **MobileServiceClient** class is instantiated. The first parameter in the constructor is the Mobile Service endpoint and the second parameter is the Application Key for your Mobile Service.
 
-	> **Note:** You may also add references to the Windows Azure Mobile Services Client SDK from any Windows Store app. Using the Add reference dialog
-
-1. Open **default.js** under **js** folder.  This is the key Javascript function provided by the Mobile Services client SDK that provides a way for your application to interact with **Windows Azure Mobile Services**. Locate the portion of code where a new **MobileServiceClient** class is instantiated. The first parameter in the constructor is the Mobile Service endpoint and the second parameter is the Application Key for your Mobile Service.
-
-	````Javascript
+	````JavaScript
 	 var client = new Microsoft.WindowsAzure.MobileServices.MobileServiceClient(
 				"https://todolist.azure-mobile.net/",
                 "UrHdABRWplXRUyRsfnXBXyHdIlKRLH21"
@@ -140,59 +140,63 @@ In this step we explore _To do list_ application code and see how simple the Win
 
 1. Below the previous code, you can observe how the mobile service client is then used for Inserts, Updates, Reads and Deletes:
 
-	- The source creates a handle for operations on a table
+	The source creates a handle for operations on a table:
 
-		````C#
-		var todoTable = client.getTable('TodoItem');
-		
-		````
-	- Performs an Insert
-		<!-- mark:4-6;-->
-		````C#
-		var insertTodoItem = function (todoItem) {
-                // This code inserts a new TodoItem into the database. When the operation completes
-                // and Mobile Services has assigned an id, the item is added to the Binding List
-                todoTable.insert(todoItem).done(function (item) {
-                    todoItems.push(item);
-                });
-            };
+	````C#
+	var todoTable = client.getTable('TodoItem');		
+	````
 
-		````
-	- Performs an Update
-		<!-- mark:4-6 -->
-		````C#
-		var updateCheckedTodoItem = function (todoItem) {
-                // This code takes a freshly completed TodoItem and updates the database. When the MobileService 
-                // responds, the item is removed from the list 
-                todoTable.update(todoItem).done(function (item) {
-                    todoItems.splice(todoItems.indexOf(item), 1);
-                });
-            };
-		````
-	- Performs a Read
-		<!-- mark:3-9 -->
-		````C#
-		var refreshTodoItems = function () {
-                // This code refreshes the entries in the list view be querying the TodoItems table.
-                // The query excludes completed TodoItems                
-                todoTable.where({ complete: false })
-                    .read()
-                    .done(function (results) {
-                        todoItems = new WinJS.Binding.List(results);
-                        listItems.winControl.itemDataSource = todoItems.dataSource;
-                    });
-            };
-		````
+	Performs an Insert:
+
+	<!-- mark:4-6;-->
+	````C#
+	var insertTodoItem = function (todoItem) {
+				 // This code inserts a new TodoItem into the database. When the operation completes
+				 // and Mobile Services has assigned an id, the item is added to the Binding List
+				 todoTable.insert(todoItem).done(function (item) {
+					  todoItems.push(item);
+				 });
+			};
+	````
+
+	Performs an Update:
+
+	<!-- mark:4-6 -->
+	````C#
+	var updateCheckedTodoItem = function (todoItem) {
+				 // This code takes a freshly completed TodoItem and updates the database. When the MobileService 
+				 // responds, the item is removed from the list 
+				 todoTable.update(todoItem).done(function (item) {
+					  todoItems.splice(todoItems.indexOf(item), 1);
+				 });
+			};
+	````
+
+	Performs a Read:
+
+	<!-- mark:3-9 -->
+	````C#
+	var refreshTodoItems = function () {
+				 // This code refreshes the entries in the list view be querying the TodoItems table.
+				 // The query excludes completed TodoItems                
+				 todoTable.where({ complete: false })
+					  .read()
+					  .done(function (results) {
+							todoItems = new WinJS.Binding.List(results);
+							listItems.winControl.itemDataSource = todoItems.dataSource;
+					  });
+			};
+	````
 
 <a name="Exercise2" />
 ## Exercise 2: Adding Push Notifications to your app ##
 
-In demo, you add push notifications, using the Windows Push Notification service (WNS), to the quickstart project. When complete, an insert in the mobile service todolist table will generate a push notification back to your app. 
+Now you will add push notifications, using the **Windows Push Notification service** (WNS), to the quickstart project. When completed, whenever you insert an item in the mobile service TodoList table, it will generate a push notification back to your application.
 
 <a name="Register-your-app-for-push-notifications-and-configure-Mobile-Services" />
 ### Task 1 - Register your app for push notifications and configure Mobile Services ###
 
-1.	Click **Store** in the Visual Studio menu and select **Reserve App Name**.
+1.	In Visual Studio, click **Store** in the menu and select **Reserve App Name**. This will open a browser.
 
 	![Reserving App Name](./Images/reserving-app-name.png?raw=true)
 
@@ -271,9 +275,9 @@ In demo, you add push notifications, using the Windows Push Notification service
 
 1. Open the file **default.js** file under the **js** folder.
 
-1. Inser the following code into the **app.OnActivated** method overload, just after the args.SetPromise method.
+1. Insert the following code into the **app.OnActivated** method overload, just after the args.SetPromise method.
 
-	````Javascript
+	````JavaScript
 	// Get the channel for the application. 
 	var channel; 
 	var channelOperation = Windows.Networking.PushNotifications
@@ -286,7 +290,7 @@ In demo, you add push notifications, using the Windows Push Notification service
 
 1. Insert the following code after the code that creates the **MobileServiceClient** instance:
 
-	````Javascript
+	````JavaScript
 	// Insert the new channel URI into the Channel table.
    var channelTable = client.getTable('Channel');
    channelTable.insert({ uri: channel.uri });
@@ -297,7 +301,7 @@ Now that we have the client wired up to request a channel and write it to our Mo
 <a name="Insert-data-to-receive-notifications" />
 ### Task 3 - Insert data to receive notifications ###
 
-In this section we add a Channel table and server side scripts to send push notifications everytime someone inserts into our todolist.  
+In this section we add a Channel table and server side scripts to send push notifications every time someone inserts into our Todo-List.  
 
 1. Return to the [Windows Azure Management Portal](https://manage.windowsazure.com/), click **Mobile Services**, and then click your app.
 
@@ -337,15 +341,15 @@ This is the minimum requirement for a table in Mobile Services.
 		} 
 	}
 	````
-	> **Note:** The purpose of this script is to ensure that multiple channels with the same Uri are not submitted every time the OnLaunched handler executes in the sample application. This code is sufficient for a HOL scenario but in a real application you would use an Id rather then matching on uri: item.Uri to identify the channel to be replaced.  The reasoning is Channels expire and will be replaced by a new unique Channel Uri.
+	> **Note:** The purpose of this script is to ensure that multiple channels with the same Uri are not submitted every time the OnLaunched handler executes in the sample application. This code is sufficient for a HOL scenario but in a real application you would use an Id rather than matching on Uri: item.Uri to identify the channel to be replaced.  The reasoning is Channels expire and will be replaced by a new unique Channel Uri.
 
 1. Click **Save** in the bottom toolbar 
 
 	![Image 21](Images/image-21.png?raw=true)
 
-1. Now in the left navbar select the **TodoItem** table 
+1. Now in the left navigation bar select the **TodoItem** table.
 
-1. Click the **Script** tab and select the **Insert** Operation and replace the existing script with the following and walk through the following code
+1. Click the **Script** tab and select the **Insert** Operation and replace the existing script with the following and walk through the following code.
 
 
 	````JavaScript
@@ -383,7 +387,7 @@ This is the minimum requirement for a table in Mobile Services.
     });    
 	}
 	````
-	> **Note:** This script executes as a each time a the insert operation is executed on the Todoitem table.  The sendNotifications method we select all channels from the Channels table and iterate through them sending a push notification to each channel uri.  While we have only demonstrated a single toast template the push.wns.* namespace provides simple to use methods required for sending toast, tile and badge updates. As you can see in this scenario we are sending a ToastText04 template which requires three lines of text.  When you build your applications we would advise that you do not send toast notifications so frequently but rather only at times when there is a critical or important message to deliver the user of your application.
+	> **Note:** This script executes each time an insert operation is executed on the Todoitem table. In the **sendNotifications** method, we select all the channels from the Channels table and iterate through them sending a push notification to each channel Uri.  While we have only demonstrated a single toast template, the push.wns.* namespace provides simple-to-use methods required for sending toast, tile and badge updates. As you can see in this scenario we are sending a ToastText04 template which requires three lines of text.  When you build your applications we would advise that you do not send toast notifications frequently but only at times when a critical or important message needs to be delivered to the user of your application.
 
 	![Image 22](Images/image-22.png?raw=true)
 
@@ -392,16 +396,23 @@ Next we will move on to look at how you can secure your Mobile Service endpoints
 <a name="Exercise3" />
 ## Exercise 3: Adding Auth to Your App and Services ##
 
-This demo shows you how to authenticate users in Windows Azure Mobile Services from a Windows 8 app. In this demo, you add authentication to the quickstart project using Live Connect. When successfully authenticated by Live Connect, a logged-in will be able to consume your Mobile Service.
+This exercise shows you how to authenticate users in Windows Azure Mobile Services from a Windows 8 app. You will add authentication to the quickstart project using Live Connect. When successfully authenticated by Live Connect, a logged-in will be able to consume your Mobile Service.
 
 <a name="Register-your-app" />
 ### Task 1 - Register your app ###
 
-To be able to authenticate users, you must register your Windows 8 app at the Live Connect Developer Center. You must then register the client secret to integrate Live Connect with Mobile Services.
+To be able to authenticate users, you must register your Windows Store app within an Identity Provider. Then you must then register the obtained client secret to integrate the provider with Mobile Services.
 
-1. Navigate to the [Windows Push Notifications & Live Connect](http://go.microsoft.com/fwlink/?LinkID=257677&clcid=0x409) page, log on with your Microsoft account if needed.
+The supported identity providers are listed below. In this exercise you will use **Microsoft Account** as the provider, nevertheless you can use the one of your preferences and you can follow the steps to register your app with that provider:
 
-1. To enable auth you must now Navigate to the [My Apps dashboard](http://go.microsoft.com/fwlink/?LinkId=262039&clcid=0x409) in Live Connect Developer Center and click on your app in the **My applications** list.
+- [Microsoft Account] (http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-microsoft-authentication/)
+- [Facebook login] (http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-facebook-authentication/)
+- [Twitter login] (http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-twitter-authentication/)
+- [Google login] (http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-google-authentication/)
+
+1. Navigate to the [My Applications](http://go.microsoft.com/fwlink/p/?linkid=262039&clcid=0x409) page in the Live Connect Developer Center, log on with your Microsoft account if needed.
+
+1. To enable authentication you must now navigate to the [My Apps dashboard](http://go.microsoft.com/fwlink/?LinkId=262039&clcid=0x409) in Live Connect Developer Center and click on your app in the **My applications** list.
 
 	![Image 24](Images/image-24.png?raw=true)
 
@@ -439,77 +450,42 @@ This happens because the app is accessing Mobile Services as an unauthenticated 
 
 Next, you will update the app to authenticate users with your Microsoft Account before requesting resources from the mobile service.
 
-<a name="Add-authentication" />
+<a name="Ex3Task3" />
 ### Task 3 - Add authentication ###
 
-1. Download and install the [Live SDK for Windows](http://go.microsoft.com/fwlink/?LinkId=262253&clcid=0x409)
-
-1. In the project in Visual Studio, click **Add Reference**, then expand **Windows**, click **Extensions**, check **Live SDK** and click **OK**.
-
-	![Adding the Live SDK extension](Images/adding-the-live-sdk-extension.png?raw=true)
-
-1. Open the **default.html** file and add the following **\<script\>** element in the **\<head\>** element.
-
-	````HTML
-	<script src="///LiveSDKHTML/js/wl.js"></script>
-	````
-
-	> **Note:** This enables **Microsoft IntelliSense** in the default.html file.
-
-1. Open **default.js** and add the following comment to the top of the file.
-
-	````Javascript
-	/// <reference path="///LiveSDKHTML/js/wl.js" />
-	````
-
-	> **Note:** This enables **Microsoft IntelliSense** in the default.js file.
+1. Open **default.js** in Visual Studio.
 
 1. In the **app.OnActivated** method overload, replace the call to the **refreshTodoItems** method with the following code:
 
-	````Javascript
-	var session = null;                     
+	````JavaScript
+	 var userId = null;
+
+	// Request authentication from Mobile Services using a Microsoft Account login.
 	var login = function () {
-		 return new WinJS.Promise(function (complete) {                    
-			  WL.login({ scope: "wl.basic"}).then(function (result) {
-					session = result.session;
-
-			  WinJS.Promise.join([
-					WL.api({ path: "me", method: "GET" }),
-					client.login(result.session.authentication_token)
-			  ]).done(function (results) {
-					var profile = results[0];
-					var mobileServicesUser = results[1];
+		 return new WinJS.Promise(function (complete) {
+			  client.login("microsoftaccount").done(function (results) {;
+					userId = results.userId;
 					refreshTodoItems();
-					var title = "Welcome " + profile.first_name + "!";
-					var message = "You are now logged in as: " + mobileServicesUser.userId;
-					var dialog = new Windows.UI.Popups.MessageDialog(message, title);
-					dialog.showAsync().done(complete);                                
-			  });                       
-		 }, function (error) {                        
-			  session = null;
-			  var dialog = new Windows.UI.Popups.MessageDialog("You must log in.", "Login Required");
-			  dialog.showAsync().done(complete);                        
+					var message = "You are now logged in as: " + userId;
+					var dialog = new Windows.UI.Popups.MessageDialog(message);
+					dialog.showAsync().done(complete);
+			  }, function (error) {
+					userId = null;
+					var dialog = new Windows.UI.Popups
+						 .MessageDialog("An error occurred during login", "Login Required");
+					dialog.showAsync().done(complete);
+			  });
 		 });
-	});
 	}
 
-	var authenticate = function () {                
+	var authenticate = function () {
 		 login().then(function () {
-			  if (session === null) {
-
-			  // Authentication failed, try again.
-			  authenticate();
-		 }
-	});
-
-
+			  if (userId === null) {
+					// Authentication failed, try again.
+					authenticate();
+			  }
+		 });
 	}
-
-
-	WL.init({
-		 redirect_uri: "<< INSERT REDIRECT DOMAIN HERE >>"
-	});           
-
 
 	authenticate();
 	````
@@ -527,7 +503,7 @@ Next, you will update the app to authenticate users with your Microsoft Account 
 
 In this demo you learn how to execute script on a scheduled basis using **Windows Azure Mobile Services**.  In this scenario we will configure the scheduler to poll Twitter every 15 minutes and then send a Tile update with the latest tweets.
 
-
+<a name="configure-wide-tiles" />
 ### Task 1 - Configure your Windows store app for Wide Tiles ###
 1. In Visual Studio Open your **package.appxmanifest**
 
@@ -539,7 +515,7 @@ In this demo you learn how to execute script on a scheduled basis using **Window
 
 > **Note:** Note if you do not have an image of these dimensions available you can use Microsoft Paint to quickly create one
 
-
+<a name="configure-mobile-scheduler" />
 ### Task 2 - Configure the Mobile Services scheduler ###
 
 1. Create the scheduler job that will send push notifications to registered clients every 15 minutes with the latest Twitter updates for a particular twitter handle.

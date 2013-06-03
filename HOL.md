@@ -322,7 +322,7 @@ This is the minimum requirement for a table in Mobile Services.
 
 	> **Note:** When dynamic schema is enabled on your mobile service, new columns are created automatically when JSON objects are sent to the mobile service by an insert or update operation.
 
-1. Click the script tab and select the **Insert** Operation
+1. Click the **Script** tab and select the **Insert** Operation
 
 1. Replace the existing script with the following script.  
 
@@ -349,7 +349,7 @@ This is the minimum requirement for a table in Mobile Services.
 
 1. Now in the left navigation bar select the **TodoItem** table.
 
-1. Click the **Script** tab and select the **Insert** Operation and replace the existing script with the following and walk through the following code.
+1. Click the **Script** tab and select the **Insert** operation and replace the existing script with the following code. Then click **Save** at the bottom toolbar.
 
 
 	````JavaScript

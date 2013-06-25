@@ -14,6 +14,7 @@ In this HOL you will learn how you can leverage Visual Studio 2012 and Windows A
 - Add Push Notifications to your application
 - Lock down your Mobile Service such that only authenticated users can consume it
 - Add a Scheduled Job to poll the Twitter API and send tile updates
+
 <a name="technologies" />
 ### Prerequisites ###
 
@@ -405,10 +406,13 @@ To be able to authenticate users, you must register your Windows Store app withi
 
 The supported identity providers are listed below. In this exercise you will use **Microsoft Account** as the provider, nevertheless you can use the one of your preferences and you can follow the steps to register your app with that provider:
 
-- [Microsoft Account] (http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-microsoft-authentication/)
-- [Facebook login] (http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-facebook-authentication/)
-- [Twitter login] (http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-twitter-authentication/)
-- [Google login] (http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-google-authentication/)
+[Microsoft Account] (http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-microsoft-authentication/)
+
+[Facebook login] (http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-facebook-authentication/)
+
+[Twitter login] (http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-twitter-authentication/)
+
+[Google login] (http://www.windowsazure.com/en-us/develop/mobile/how-to-guides/register-for-google-authentication/)
 
 1. Navigate to the [My Applications](http://go.microsoft.com/fwlink/p/?linkid=262039&clcid=0x409) page in the Live Connect Developer Center, log on with your Microsoft account if needed.
 
@@ -511,9 +515,9 @@ In this demo you learn how to execute script on a scheduled basis using **Window
 
 1. Provide a Wide Tile Logo of 310x150 pixels.  
 
-![Image 47](Images/image-47.png?raw=true)
+	![Image 47](Images/image-47.png?raw=true)
 
-> **Note:** Note if you do not have an image of these dimensions available you can use Microsoft Paint to quickly create one
+	> **Note:** Note if you do not have an image of these dimensions available you can use Microsoft Paint to quickly create one
 
 <a name="configure-mobile-scheduler" />
 ### Task 2 - Configure the Mobile Services scheduler ###
